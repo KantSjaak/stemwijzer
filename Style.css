@@ -11,3 +11,8 @@
 p {
     font-size: 30px;
 }
+
+#title, #statement, #content {
+    display: block;
+    width: 100%;
+}
