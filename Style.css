@@ -1,18 +1,10 @@
-#title {
-     color: deepskyblue;
- }
+body {
+    background-color: black;
+    color: #35ffaa;
+}
 
-#container {
+#BTNcontainer {
     display: flex;
-    justify-content: center;
-    text-align: center;
-}
-
-p {
-    font-size: 30px;
-}
-
-#title, #statement, #content {
-    display: block;
-    width: 100%;
+    justify-content: space-between;
+    width: 40%;
 }
