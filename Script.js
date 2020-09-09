@@ -3,7 +3,82 @@ let partiesShown = "none";
 let currentQuestion = 0;
 let votes = [];
 let weight = [];
-let txt = ["Terug", "Sla deze vraag over", "Eens", "Geen van beide", "Oneens"];
+let txt = ["terug", "skip", "pro", "none", "contra"];
+let txtBTN = ["terug", "Sla deze vraag over", "Eens", "Geen mening", "Oneens"];
+//this holds the end scores
+let scores = [{
+    name: "VVD",
+    points: 0
+}, {
+    name: "CDA",
+    points: 0
+}, {
+    name: "PVV",
+    points: 0
+}, {
+    name: "D66",
+    points: 0
+}, {
+    name: "GroenLinks",
+    points: 0
+}, {
+    name: "SP",
+    points: 0
+}, {
+    name: "PvdA",
+    points: 0
+}, {
+    name: "ChristenUnie",
+    points: 0
+}, {
+    name: "Partij voor de Dieren",
+    points: 0
+}, {
+    name: "SGP",
+    points: 0
+}, {
+    name: "DENK",
+    points: 0
+}, {
+    name: "Forum voor Democratie",
+    points: 0
+}, {
+    name: "Lokaal in de Kamer",
+    points: 0
+}, {
+    name: "OndernemersPartij",
+    points: 0
+}, {
+    name: "VNL",
+    points: 0
+}, {
+    name: "Nieuwe Wegen",
+    points: 0
+}, {
+    name: "De Burger Beweging",
+    points: 0
+}, {
+    name: "Piratenpartij",
+    points: 0
+}, {
+    name: "Artikel 1",
+    points: 0
+}, {
+    name: "Libertarische Partij",
+    points: 0
+}, {
+    name: "50Plus",
+    points: 0
+}, {
+    name: "Vrijzinnige Partij",
+    points: 0
+}, {
+    name: "Libertarische Partij",
+    points: 0
+}, {
+    name: "Niet Stemmers",
+    points: 0
+}];
 
 function createElement(elementType, appendTo, id, innerText, Class) {
     let element = document.createElement(elementType);
@@ -17,6 +92,20 @@ function createElement(elementType, appendTo, id, innerText, Class) {
     }
 }
 
+//sorting functions for jsons, will see near the end
+function predicateBy(prop){
+    return function(a,b){
+        if (a[prop] > b[prop]){
+            return 1;
+        } else if(a[prop] < b[prop]){
+            return -1;
+        }
+        return 0;
+    }
+}
+
+
+
 document.getElementById("startButton").onclick = function () {
     this.style.display = "none";
     document.getElementById("startMenu").style.display = "none";
@@ -24,7 +113,7 @@ document.getElementById("startButton").onclick = function () {
     document.getElementById("title").innerHTML = subjects[0].title;
     document.getElementById("statement").innerHTML = subjects[0].statement;
     for (let i = 0; i < 5; i++) {
-        createElement("button", "BTNcontainer", "btn" + i, txt[i], null);
+        createElement("button", "BTNcontainer", "btn" + i, txtBTN[i], null);
         document.getElementById("btn0").innerHTML = "";
         document.getElementById("btn0").style.backgroundImage = "url(images/arrow.png)";
         if (i <= 4 && i >= 1) {
@@ -107,43 +196,72 @@ function partiesPickList() {
     document.getElementById("feedbackContainer").style.display = "none";
     document.getElementById("title").innerHTML = "Welke partijen wilt u meenemen in het resultaat?";
     document.getElementById("statement").innerHTML = "U kunt kiezen voor grote partijen(deze hebben minimaal " + zetels + "). Ook kunt u kiezen of u alleen seculiere partijen wilt zien.";
-    document.getElementById("NextButton").onclick = function () {showList()};
+    document.getElementById("NextButton").onclick = function () {endCalculation()};
     createElement("BUTTON", "voteContainer", "btnPartiesHuge", "grote partijen", "btnPartiesHuge");
     document.getElementById("btnPartiesHuge").onclick = function (){
-        partiesShown = "BigParties"
+        partiesShown = "BigParties";
+        endCalculation();
     };
     createElement("BUTTON", "voteContainer", "btnPartiesSmall", "seculiere partijen", "btnPartiesSmall");
     document.getElementById("btnPartiesSmall").onclick = function (){
-        partiesShown = "SecunParties"
+        partiesShown = "SecunParties";
+        endCalculation();
     };
 }
-//"Eens", "Geen van beide", "Oneens"
-function showList() {
-    let scores = [{"VVD":0, "CDA":0, "PVV":0, "D66":0, "GroenLinks":0, "SP":0, "PvdA":0, "ChristenUnie":0, "Partij voor de Dieren":0, "SGP":0, "DENK":0, "Forum voor Democratie":0, "Lokaal in de Kamer":0, "OndernemersPartij":0, "VNL":0, "Nieuwe Wegen":0, "De Burger Beweging":0, "Piratenpartij":0, "Artikel 1":0, "Libertarische Partij":0, "50Plus":0, "Vrijzinnige Partij":0, "Niet Stemmers":0}];
-    console.log(scores);
+
+function endCalculation() {
     document.getElementById("title").innerHTML = "Hier ziet u de partijen die passen bij uw keuzes";
     document.getElementById("statement").style.display = "none";
     document.getElementById("btnPartiesHuge").style.display = "none";
     document.getElementById("btnPartiesSmall").style.display = "none";
-    if(partiesShown === "none"){
-        for (var i=0; i<subjects.length; i++){
-            if(votes[i] === txt[2]){
-                for(var a=0; a<parties.length; a++){
-                    console.log(subjects[0].parties[0].position);
-                    if(subjects[0].parties[0].position === "pro"){
-                        scores[subjects[0].parties[0].name]++;
-                    }
-                }
-                console.log(subjects[i].parties[a]);
-            }else if(votes[i] === txt[3]){
-
-            }else if(votes[i] === txt[4]){
-
+    document.getElementById("NextButton").style.display = "none";
+    for (let i=0; i<subjects.length; i++){
+        for (let x=0; x<subjects[i].parties.length; x++){
+            if(votes[i] === "skip"){
+                break;
+            }else if(subjects[i].parties[x].position === votes[i]){
+                scores[x].points += parseInt(weight[i]);
             }
         }
+    }
+    showList();
+    createElement("DIV", "content", "answerWrapper");
+    scores.sort( predicateBy("points") );
+}
+
+function showList() {
+    if(partiesShown === "none"){
+        for (let x=scores.length-1; x>0; x--){
+            createElement("P", "answerWrapper", "answer" + scores[x].name, scores[x].name + " heeft " + scores[x].points + " punten op basis van uw keuzes.");
+        }
     }else if(partiesShown === "BigParties"){
-
+        /*let x=scores.length-1;
+        for (let i=0; i<parties.length; i++){
+            if (parties[i].secular===false){
+                createElement("P", "answerWrapper", "answer" + scores[x].name, scores[x].name + " heeft " + scores[x].points + " punten op basis van uw keuzes.");
+            }
+            x--;
+        }*/
+        let x=0;
+        for (let i=0; i<parties.length; i++){
+            if (parties[i].secular === true && parties[i].secular !== undefined){
+                console.log(parties[i]);
+                console.log(scores[i]);
+                scores.splice(x,1);
+            }else {
+                x++;
+            }
+        }
     }else if(partiesShown === "SecunParties"){
-
+        if (parties[i].secular === true && parties[i].secular !== undefined){
+            console.log(parties[i]);
+        }
+        /*let x=scores.length-1;
+        for (let i=0; i<parties.length; i++){
+            if (parties[i].secular===true){
+                createElement("P", "answerWrapper", "answer" + scores[x].name, scores[x].name + " heeft " + scores[x].points + " punten op basis van uw keuzes.");
+            }
+            x--;
+        }*/
     }
 }

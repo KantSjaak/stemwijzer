@@ -109,3 +109,7 @@ body {
 #feedbackContainer p {
     margin-bottom: 0;
 }
+
+#answerWrapper {
+    text-align: center;
+}
