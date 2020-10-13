@@ -90,20 +90,6 @@ function createElement(elementType, appendTo, id, innerText, Class) {
     }
 }
 
-//sorting functions for jsons, will see near the end
-function predicateBy(prop){
-    return function(a,b){
-        if (a[prop] > b[prop]){
-            return 1;
-        } else if(a[prop] < b[prop]){
-            return -1;
-        }
-        return 0;
-    }
-}
-
-
-
 document.getElementById("startButton").onclick = function () {
     this.style.display = "none";
     document.getElementById("startMenu").style.display = "none";
@@ -242,7 +228,6 @@ function endCalculation() {
     document.getElementById("btnPartiesSmall").style.display = "none";
     document.getElementById("NextButton").style.display = "none";
     for (let i=0; i<subjects.length; i++){
-        console.log("question " + i);
         for (let x=0; x<subjects[i].parties.length; x++){
             if(votes[i] === "skip"){
                 console.log("skipped");
@@ -251,13 +236,18 @@ function endCalculation() {
                 person["Niet Stemmers"] += parseInt(weight[i]);
                 break;
             }else if(subjects[i].parties[x].position === votes[i]){
-                console.log("added " + weight[i] + " to " + console.log(subjects[i].parties[x].name) + " cause their position is " + subjects[i].parties[x].position);
                 person[subjects[i].parties[x].name] += parseInt(weight[i])
             }
         }
     }
     createElement("DIV", "container", "answerWrapper");
+    sortList();
     showList();
+}
+
+function sortList() {
+    //person.sort();
+    console.dir(person);
 }
 
 function showList() {
@@ -272,7 +262,6 @@ function showList() {
             }
         }
     }else if(partiesShown === "SecunParties"){
-        scores.sort( predicateBy("points") );
         for (let x=23; x>0; x--){
             if(true){
                 createElement("P", "answerWrapper", "answer" + scores[x].name, scores[x].name + " heeft " + scores[x].points + " punten, " + "");
