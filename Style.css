@@ -27,6 +27,7 @@ body {
     height: 50px;
     background-repeat: no-repeat;
     background-position: center;
+
 }
 
 #container {
@@ -57,6 +58,7 @@ body {
     width: 201px;
     height: 60px;
     margin: 0 12px;
+    font-weight: bold;
 }
 
 #startButton {
@@ -112,4 +114,8 @@ body {
 
 #answerWrapper {
     text-align: center;
+}
+
+#voteContainer {
+    max-width: 1004px;
 }
