@@ -80,6 +80,8 @@ body {
 #startMenuHeaderTxt {
     font-weight: bold;
     margin-top: 0;
+    font-family: Arial;
+    font-size: 20px;
 }
 
 #startMenuHeaderTitle {
@@ -89,6 +91,7 @@ body {
 #startMenuStatement {
     color: #01b4dc;
     font-weight: bold;
+    line-height: 1.3em;
 }
 
 #startMenuFooterTxt {

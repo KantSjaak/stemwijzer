@@ -115,6 +115,11 @@ function partiesPickList() {
     document.getElementById("title").innerHTML = "Welke partijen wilt u meenemen in het resultaat?";
     document.getElementById("statement").innerHTML = "U kunt kiezen voor grote partijen(deze hebben minimaal " + zetels + " zetels). Ook kunt u kiezen of u alleen seculiere partijen wilt zien.";
     document.getElementById("NextButton").onclick = function () {endCalculation()};
+    createElement("BUTTON", "voteContainer", "btnPartiesBig", "Grote partijen", "btnPartiesBig");
+    document.getElementById("btnPartiesBig").onclick = function (){
+        partiesShown = "bigParties";
+        endCalculation();
+    };
     createElement("BUTTON", "voteContainer", "btnPartiesSmall", "Seculiere partijen", "btnPartiesSmall");
     document.getElementById("btnPartiesSmall").onclick = function (){
         partiesShown = "SecunParties";
@@ -152,6 +157,7 @@ function endCalculation() {
     document.getElementById("title").innerHTML = "Hier ziet u de partijen die passen bij uw keuzes";
     document.getElementById("statement").style.display = "none";
     document.getElementById("btnPartiesSmall").style.display = "none";
+    document.getElementById("btnPartiesBig").style.display = "none";
     document.getElementById("NextButton").style.display = "none";
     for (let i=0; i<subjects.length; i++){
         for (let x=0; x<subjects[i].parties.length; x++){
@@ -172,8 +178,13 @@ function endCalculation() {
     showList();
 }
 
-function isSecular(x) {
+function isSecularParty(x) {
     return x.secular === true;
+}
+
+
+function isBigParty(x) {
+    return x.size >= zetels;
 }
 
 function sortList() {
@@ -202,7 +213,12 @@ function showList() {
             createElement("P", "answerWrapper", "answer" + parties[x].name, 'De partij "' + parties[x].name + '" past bij u voor ' + roundToTwo(percentage(parties[x].points, calculateVotes())) + '%.');
         }
     }else if(partiesShown === "SecunParties"){
-        var filtered = parties.filter(isSecular);
+        let filtered = parties.filter(isSecularParty);
+        for (let x=0; x<filtered.length; x++){
+            createElement("P", "answerWrapper", "answer" + parties[x].name, 'De partij "' + filtered[x].name + '" past bij u voor ' + roundToTwo(percentage(filtered[x].points, calculateVotes())) + '%.');
+        }
+    }else if(partiesShown === "bigParties"){
+        let filtered = parties.filter(isBigParty);
         for (let x=0; x<filtered.length; x++){
             createElement("P", "answerWrapper", "answer" + parties[x].name, 'De partij "' + filtered[x].name + '" past bij u voor ' + roundToTwo(percentage(filtered[x].points, calculateVotes())) + '%.');
         }
